@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '838176800261',
     projectId: 'miniproject-b3a4e',
     authDomain: 'miniproject-b3a4e.firebaseapp.com',
+    databaseURL: 'https://miniproject-b3a4e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'miniproject-b3a4e.firebasestorage.app',
     measurementId: 'G-NMXEV38X03',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:838176800261:android:992e594adfa154335d666c',
     messagingSenderId: '838176800261',
     projectId: 'miniproject-b3a4e',
+    databaseURL: 'https://miniproject-b3a4e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'miniproject-b3a4e.firebasestorage.app',
   );
 
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:838176800261:ios:ae397c278f479ef95d666c',
     messagingSenderId: '838176800261',
     projectId: 'miniproject-b3a4e',
+    databaseURL: 'https://miniproject-b3a4e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'miniproject-b3a4e.firebasestorage.app',
     iosBundleId: 'com.example.miniproject',
   );
@@ -72,6 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:838176800261:ios:ae397c278f479ef95d666c',
     messagingSenderId: '838176800261',
     projectId: 'miniproject-b3a4e',
+    databaseURL: 'https://miniproject-b3a4e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'miniproject-b3a4e.firebasestorage.app',
     iosBundleId: 'com.example.miniproject',
   );
@@ -82,7 +86,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '838176800261',
     projectId: 'miniproject-b3a4e',
     authDomain: 'miniproject-b3a4e.firebaseapp.com',
+    databaseURL: 'https://miniproject-b3a4e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'miniproject-b3a4e.firebasestorage.app',
     measurementId: 'G-PD4Y3SDPHE',
   );
+
 }

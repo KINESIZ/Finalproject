@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miniproject/constant/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,11 @@ class _RegisterfirebaseState extends State<Registerfirebase> {
           .createUserWithEmailAndPassword(
         email: email.text,
         password: password.text,
+        
       );
+
       print("Register Success: ${userCredential.user?.email}");
-      
+
       // สามารถเพิ่มโค้ดบันทึกชื่อใน Firestore ได้ที่นี่ถ้าต้องการ
     } on FirebaseAuthException catch (e) {
       print("Error Code: ${e.code}");

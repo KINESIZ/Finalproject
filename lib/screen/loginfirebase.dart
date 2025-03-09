@@ -23,7 +23,7 @@ class _FirebaseloginState extends State<Firebaselogin> {
 
         // การสั่งให้เปลี่ยนไปหน้าใหม่
         MaterialPageRoute materialPageRoute =
-            MaterialPageRoute(builder: (BuildContext context) => Dashboard());
+            MaterialPageRoute(builder: (BuildContext context) => BlogFeedScreen());
         Navigator.of(context).pushAndRemoveUntil(
             materialPageRoute, (Route<dynamic> route) => false);
       }).catchError((onError) {
