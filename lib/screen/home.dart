@@ -27,13 +27,9 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Mini Project",
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              Image.asset(
+                'assets/RMUTI-logo.png', 
+                width: 150, // กำหนดขนาดรูปภาพ (ถ้าต้องการ)
               ),
               SizedBox(height: 30),
               btnRegisterfirebase(context),
