@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/RMUTI-logo.png', 
+                'assets/RMUTI-logo.png',
                 width: 150, // กำหนดขนาดรูปภาพ (ถ้าต้องการ)
               ),
               SizedBox(height: 30),
@@ -60,11 +60,15 @@ class _HomeState extends State<Home> {
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
             ),
             child: Text(
               'Register',
-              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.blueAccent),
+              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blueAccent),
             ),
           ),
         ),
@@ -90,11 +94,15 @@ class _HomeState extends State<Home> {
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
             ),
             child: Text(
               'Login',
-              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.purpleAccent),
+              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.purpleAccent),
             ),
           ),
         ),

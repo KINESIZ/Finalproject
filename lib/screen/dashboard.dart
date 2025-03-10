@@ -1,13 +1,10 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miniproject/screen/details.dart';
 import 'package:miniproject/screen/home.dart';
-import 'package:path_provider/path_provider.dart';
 
 class BlogFeedScreen extends StatefulWidget {
   @override
@@ -25,39 +22,41 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
   }
 
   Future<List<Map<String, dynamic>>> fetchBlogs() async {
-  try {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('blogs')
-        .orderBy('datetime', descending: true)
-        .get();
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('blogs')
+          .orderBy('datetime', descending: true)
+          .get();
 
-    return snapshot.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>? ?? {};
-      return {
-        'id': doc.id,
-        'title': data['title'] ?? 'No Title',
-        'date': data['datetime'] != null
-            ? DateTime.tryParse(data['datetime'].toString())?.toIso8601String() ?? 'No Date'
-            : 'No Date',
-        'image': data['image'] ?? '',
-        'descriptions': data['descriptions'] ?? '',
-      };
-    }).toList();
-  } catch (e) {
-    return [];
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>? ?? {};
+        return {
+          'id': doc.id,
+          'title': data['title'] ?? 'No Title',
+          'date': data['datetime'] != null
+              ? DateTime.tryParse(data['datetime'].toString())
+                      ?.toIso8601String() ??
+                  'No Date'
+              : 'No Date',
+          'image': data['image'] ?? '',
+          'descriptions': data['descriptions'] ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      return [];
+    }
   }
-}
 
   Future<void> deleteBlog(String id) async {
-  try {
-    await FirebaseFirestore.instance.collection('blogs').doc(id).delete();
-    setState(() {}); // รีเฟรชหน้าหลังลบข้อมูล
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error deleting blog: $e')),
-    );
+    try {
+      await FirebaseFirestore.instance.collection('blogs').doc(id).delete();
+      setState(() {}); // รีเฟรชหน้าหลังลบข้อมูล
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting blog: $e')),
+      );
+    }
   }
-}
 
   logout() async {
     await FirebaseAuth.instance.signOut();
@@ -197,7 +196,7 @@ class BlogCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 6,
+      elevation: 10,
       shadowColor: Colors.black45,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,8 +204,9 @@ class BlogCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
             child: Image.network(imagePath,
-                fit: BoxFit.cover, width: double.infinity, height: 180,
-                errorBuilder: (context, error, stackTrace) {
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 180, errorBuilder: (context, error, stackTrace) {
               return Container(
                 width: double.infinity,
                 height: 180,
@@ -234,25 +234,29 @@ class BlogCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                     // แสดงปุ่มลบถ้ามีชื่อผู้ใช้
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => onDelete(id),
-                      ),
                   ],
                 ),
                 SizedBox(height: 5),
                 Text(
                   'Published Date: ${formatDate(date)}',
-                  style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600]),
+                  style: GoogleFonts.poppins(
+                      fontSize: 12, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 8),
                 Text(
                   descriptions,
-                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[800]),
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, color: Colors.grey[800]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                Container(
+                  alignment: Alignment.centerRight, // จัดไอคอนไปทางขวา
+                  child: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => onDelete(id),
+                  ),
+                )
               ],
             ),
           ),
@@ -280,7 +284,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
       return;
     }
 
-    String userName = FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous';
+    String userName =
+        FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous';
 
     await FirebaseFirestore.instance.collection('blogs').add({
       'title': titleController.text,
@@ -310,12 +315,14 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: 'Title', border: OutlineInputBorder()),
               ),
               SizedBox(height: 10),
               TextField(
                 controller: imageController,
-                decoration: InputDecoration(labelText: 'Image URL', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: 'Image URL', border: OutlineInputBorder()),
               ),
               Text(
                 'หมายเหตุ: ต้องเป็นลิงก์รูป (http หรือ https)',
@@ -324,7 +331,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
               SizedBox(height: 10),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: 'Description', border: OutlineInputBorder()),
                 maxLines: 3,
               ),
               SizedBox(height: 20),
@@ -337,7 +345,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurpleAccent,
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
             ],

@@ -1,4 +1,3 @@
-import 'package:miniproject/constant/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:miniproject/screen/dashboard.dart';
@@ -38,7 +37,7 @@ class _FirebaseloginState extends State<Firebaselogin> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
+            colors: [Colors.blueAccent, const Color.fromARGB(255, 118, 238, 158)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
