@@ -16,10 +16,14 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
   String displayName = "";
 
   void checkAdmin() {
-    final User user = auth.currentUser!;
-    displayName = user.displayName ?? "";
-    setState(() {});
+  final User? user = auth.currentUser;
+  if (user != null) {
+    displayName = user.displayName ?? user.email ?? "Unknown User";
+  } else {
+    displayName = "Unknown User";
   }
+  setState(() {});
+}
 
   Future<List<Map<String, dynamic>>> fetchBlogs() async {
     try {
@@ -163,7 +167,7 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
   }
 }
 
-class BlogCard extends StatelessWidget {
+class BlogCard extends StatefulWidget {
   final String id;
   final String title;
   final String date;
@@ -182,13 +186,64 @@ class BlogCard extends StatelessWidget {
     required this.onDelete, // ใช้เป็น callback function
   });
 
-  String formatDate(String dateString) {
-    try {
-      DateTime dateTime = DateTime.parse(dateString);
-      return DateFormat('dd MMM yyyy, HH:mm').format(dateTime);
-    } catch (e) {
-      return dateString;
+  @override
+  _BlogCardState createState() => _BlogCardState();
+}
+
+class _BlogCardState extends State<BlogCard> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  bool isLiked = false;
+  int likeCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLikeStatus();
+  }
+
+  Future<void> fetchLikeStatus() async {
+    final user = auth.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('blogs')
+        .doc(widget.id)
+        .get();
+
+    final data = doc.data();
+    if (data != null && data.containsKey('likes')) {
+      final likes = Map<String, dynamic>.from(data['likes']);
+      setState(() {
+        isLiked = likes.containsKey(user.uid);
+        likeCount = likes.length;
+      });
     }
+  }
+
+  Future<void> toggleLike() async {
+    final user = auth.currentUser;
+    if (user == null) return;
+
+    final docRef =
+        FirebaseFirestore.instance.collection('blogs').doc(widget.id);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      if (!snapshot.exists) return;
+
+      final data = snapshot.data()!;
+      final likes = Map<String, dynamic>.from(data['likes'] ?? {});
+
+      if (likes.containsKey(user.uid)) {
+        likes.remove(user.uid); // Unlike
+      } else {
+        likes[user.uid] = true; // Like
+      }
+
+      transaction.update(docRef, {'likes': likes});
+    });
+
+    fetchLikeStatus(); // รีเฟรชค่า Like
   }
 
   @override
@@ -203,7 +258,7 @@ class BlogCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.network(imagePath,
+            child: Image.network(widget.imagePath,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 180, errorBuilder: (context, error, stackTrace) {
@@ -220,42 +275,54 @@ class BlogCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
+                Text(
+                  widget.title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Published Date: ${formatDate(date)}',
+                  'Published Date: ${widget.date}',
                   style: GoogleFonts.poppins(
                       fontSize: 12, color: Colors.grey[600]),
                 ),
+                
                 SizedBox(height: 8),
                 Text(
-                  descriptions,
+                  widget.descriptions,
                   style: GoogleFonts.poppins(
                       fontSize: 14, color: Colors.grey[800]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Container(
-                  alignment: Alignment.centerRight, // จัดไอคอนไปทางขวา
-                  child: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => onDelete(id),
-                  ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            color: isLiked ? Colors.red : Colors.grey,
+                          ),
+                          onPressed: toggleLike,
+                        ),
+                        Text(
+                          likeCount.toString(),
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => widget.onDelete(widget.id),
+                    ),
+                  ],
                 )
               ],
             ),
