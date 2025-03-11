@@ -16,14 +16,14 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
   String displayName = "";
 
   void checkAdmin() {
-  final User? user = auth.currentUser;
-  if (user != null) {
-    displayName = user.displayName ?? user.email ?? "Unknown User";
-  } else {
-    displayName = "Unknown User";
+    final User? user = auth.currentUser;
+    if (user != null) {
+      displayName = user.displayName ?? user.email ?? "Unknown User";
+    } else {
+      displayName = "Unknown User";
+    }
+    setState(() {});
   }
-  setState(() {});
-}
 
   Future<List<Map<String, dynamic>>> fetchBlogs() async {
     try {
@@ -286,11 +286,12 @@ class _BlogCardState extends State<BlogCard> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Published Date: ${widget.date}',
+                  'Published Date: ${DateFormat('dd MMM yyyy, HH:mm').format(DateTime.parse(widget.date))}',
                   style: GoogleFonts.poppins(
-                      fontSize: 12, color: Colors.grey[600]),
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
                 ),
-                
                 SizedBox(height: 8),
                 Text(
                   widget.descriptions,
