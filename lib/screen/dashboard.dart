@@ -62,6 +62,10 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
     }
   }
 
+  void refreshPage() {
+    setState(() {}); // รีเฟรชหน้าจอโดยโหลดข้อมูลใหม่
+  }
+
   logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
@@ -77,33 +81,63 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
     checkAdmin();
   }
 
+  Widget menuItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(title, style: TextStyle(color: Colors.white, fontSize: 16)),
+      onTap: onTap,
+      tileColor: Colors.black26, // สีพื้นหลังของแต่ละเมนู
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-            'Medium Blog Feed',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepPurple, Colors.purpleAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
           ),
-          backgroundColor: Colors.deepPurpleAccent,
-          elevation: 4,
-          shadowColor: Colors.black45,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(
-                Icons.logout_sharp,
+          child: AppBar(
+            title: Text(
+              'Blog Feed',
+              style: GoogleFonts.poppins(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
                 color: Colors.white,
               ),
-              onPressed: () {
-                logout();
-              },
-            )
-          ]),
+            ),
+            backgroundColor:
+                Colors.transparent, // ต้องใช้ transparent ให้ Gradient ทำงาน
+            elevation: 0, // ปิดเงา AppBar ปกติ ใช้ boxShadow แทน
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรช
+                },
+              )
+            ],
+          ),
+        ),
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchBlogs(),
         builder: (context, snapshot) {
@@ -162,6 +196,68 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
         child: Icon(Icons.add, size: 28, color: Colors.white),
         backgroundColor: Colors.deepPurpleAccent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+      drawer: Drawer(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade900, Colors.blue.shade500],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.deepPurple, Colors.blueAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.menu, color: Colors.white, size: 40),
+                    SizedBox(height: 10),
+                    Text(
+                      'Menu',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black45,
+                            blurRadius: 5,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              menuItem(Icons.home, 'Home', () {}),
+              menuItem(Icons.people, 'Profile', () {
+                Navigator.pushNamed(context, 'profile');
+              }),
+              
+              menuItem(Icons.logout_sharp, 'Logout', () {
+                logout();
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -321,7 +417,32 @@ class _BlogCardState extends State<BlogCard> {
                     ),
                     IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => widget.onDelete(widget.id),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Confirm Delete"),
+                              content: Text("คุณต้องการลบบทความนี้หรือไม่?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(), // ปิดป๊อปอัป
+                                  child: Text("ยกเลิก"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    widget.onDelete(widget.id); // ลบบทความ
+                                    Navigator.of(context).pop(); // ปิดป๊อปอัป
+                                  },
+                                  child: Text("ยืนยัน",
+                                      style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 )

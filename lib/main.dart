@@ -4,6 +4,7 @@ import 'package:miniproject/constant/constant.dart';
 import 'package:miniproject/firebase_options.dart';
 import 'package:miniproject/screen/home.dart';
 import 'package:miniproject/screen/loginfirebase.dart';
+import 'package:miniproject/screen/profile.dart';
 import 'package:miniproject/screen/registerfirebase.dart';
 
 Future <void> main() async {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           'registerfirebase': (context) => Registerfirebase(),
 
           'firebaselogin': (context) => Firebaselogin(),
+          'profile': (context) => Profile(),
           
           
         },
