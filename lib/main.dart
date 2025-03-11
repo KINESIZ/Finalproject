@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:miniproject/constant/constant.dart';
-import 'package:miniproject/firebase_options.dart';
-import 'package:miniproject/screen/home.dart';
-import 'package:miniproject/screen/loginfirebase.dart';
-import 'package:miniproject/screen/profile.dart';
-import 'package:miniproject/screen/registerfirebase.dart';
+import 'package:Miniproject/constant/constant.dart';
+import 'package:Miniproject/firebase_options.dart';
+import 'package:Miniproject/screen/home.dart';
+import 'package:Miniproject/screen/loginfirebase.dart';
+import 'package:Miniproject/screen/profile.dart';
+import 'package:Miniproject/screen/registerfirebase.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

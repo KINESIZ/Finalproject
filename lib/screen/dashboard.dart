@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:miniproject/screen/details.dart';
-import 'package:miniproject/screen/home.dart';
+import 'package:Miniproject/screen/details.dart';
+import 'package:Miniproject/screen/home.dart';
 
 class BlogFeedScreen extends StatefulWidget {
   @override
@@ -247,7 +247,7 @@ class _BlogFeedScreenState extends State<BlogFeedScreen> {
                   ],
                 ),
               ),
-              menuItem(Icons.home, 'Home', () {}),
+              
               menuItem(Icons.people, 'Profile', () {
                 Navigator.pushNamed(context, 'profile');
               }),

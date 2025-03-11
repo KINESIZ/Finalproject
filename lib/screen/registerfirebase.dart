@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miniproject/constant/constant.dart';
+import 'package:Miniproject/constant/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:miniproject/screen/home.dart';
+import 'package:Miniproject/screen/home.dart';
 
 class Registerfirebase extends StatefulWidget {
   const Registerfirebase({super.key});
